@@ -1,6 +1,6 @@
 # l2-b2-assignment-2
 
-# Live Project Link:
+# Live Project Link: https://jade-enthusiastic-shark.cyclic.app/
 
 1. Set up your project:
    Create a Project Directory: Create a directory for your project.
