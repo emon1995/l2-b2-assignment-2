@@ -83,10 +83,11 @@ const updateUserById = async (req: Request, res: Response): Promise<void> => {
     );
 
     if (user) {
+      const { password, ...userWithoutPassword } = user.toObject();
       res.status(200).json({
         success: true,
-        message: 'User fetched successfully',
-        data: user,
+        message: 'User updated successfully',
+        data: userWithoutPassword,
       });
     } else {
       res.status(200).json({
@@ -106,4 +107,5 @@ export const UserControllers = {
   createUser,
   getAllUser,
   getUserById,
+  updateUserById,
 };
