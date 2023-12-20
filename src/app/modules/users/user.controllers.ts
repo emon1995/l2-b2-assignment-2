@@ -131,10 +131,53 @@ const deleteUserById = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
+
+// delete single user delete method
+const addProductToOrder = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+    const { productName, price, quantity } = req.body;
+
+    const user = await UserServices.addProductToOrderFromDB(userId);
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found!',
+        data: null,
+      });
+      return;
+    }
+
+    if (user.orders) {
+      user.orders.push({ productName, price, quantity });
+    } else {
+      user.orders = [{ productName, price, quantity }];
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully',
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch user',
+      error: error,
+    });
+  }
+};
 export const UserControllers = {
   createUser,
   getAllUser,
   getUserById,
   updateUserById,
   deleteUserById,
+  addProductToOrder,
 };

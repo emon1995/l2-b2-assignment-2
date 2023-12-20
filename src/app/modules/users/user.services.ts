@@ -31,10 +31,16 @@ const deleteSingleUserFromDB = async (userId: string) => {
   return result;
 };
 
+const addProductToOrderFromDB = async (userId: string) => {
+  const result = await UserModel.findOne({ userId });
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
   getSingleUserFromDB,
   updateSingleUserFromDB,
   deleteSingleUserFromDB,
+  addProductToOrderFromDB,
 };
