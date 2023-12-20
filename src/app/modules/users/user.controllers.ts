@@ -207,6 +207,55 @@ const getAllOrdersForUser = async (
     });
   }
 };
+
+// calculate total price get method
+const calculateTotalPriceForUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await UserServices.calculateTotalPriceFromDB(userId);
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found!',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+      return;
+    }
+
+    let totalPrice = 0;
+
+    if (user.orders && user.orders.length > 0) {
+      totalPrice = user.orders.reduce((acc: number, order) => {
+        return acc + order.price * order.quantity;
+      }, 0);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully',
+      data: {
+        totalPrice,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch user',
+      error: {
+        code: 500,
+        description: error,
+      },
+    });
+  }
+};
 export const UserControllers = {
   createUser,
   getAllUser,
@@ -215,4 +264,5 @@ export const UserControllers = {
   deleteUserById,
   addProductToOrder,
   getAllOrdersForUser,
+  calculateTotalPriceForUser,
 };

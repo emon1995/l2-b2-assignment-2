@@ -41,6 +41,11 @@ const getAllOrdersFromDB = async (userId: string) => {
   return result;
 };
 
+const calculateTotalPriceFromDB = async (userId: string) => {
+  const result = await UserModel.findOne({ userId });
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
@@ -49,4 +54,5 @@ export const UserServices = {
   deleteSingleUserFromDB,
   addProductToOrderFromDB,
   getAllOrdersFromDB,
+  calculateTotalPriceFromDB,
 };
