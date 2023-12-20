@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from 'bcrypt';
 import { User } from './users/user.interface';
 
 const userSchema = new Schema<User>({
@@ -42,6 +43,18 @@ const userSchema = new Schema<User>({
       quantity: Number,
     },
   ],
+});
+
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  if (!user.isModified('password')) {
+    return next();
+  }
+
+  const hashedPassword = await bcrypt.hash(user.password, 10);
+  user.password = hashedPassword;
+  next();
 });
 
 export const UserModel = model<User>('User', userSchema);
