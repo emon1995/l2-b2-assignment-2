@@ -1,12 +1,23 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.services';
+import userValidationSchema from './user.validation';
 
 // create user post method
 const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userData = req.body;
 
-    const newUser = await UserServices.createUserIntoDB(userData);
+    const { error, value } = userValidationSchema.validate(userData);
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to create user',
+        error: error.details,
+      });
+    }
+
+    const newUser = await UserServices.createUserIntoDB(value);
 
     const { password, ...userWithoutPassword } = newUser.toObject();
 
