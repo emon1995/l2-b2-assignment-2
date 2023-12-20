@@ -7,12 +7,22 @@ const createUserIntoDB = async (user: User) => {
 };
 
 const getAllUserFromDB = async () => {
-  const result = await UserModel.find();
+  const result = await UserModel.find(
+    {},
+    'username fullName age email address',
+  ).exec();
   return result;
 };
 
-const getSingleUserFromDB = async (id: string) => {
-  const result = await UserModel.findById({ _id: id });
+const getSingleUserFromDB = async (userId: string) => {
+  const result = await UserModel.findOne({ userId }, '-password').exec();
+  return result;
+};
+
+const updateSingleUserFromDB = async (id: string, updateUser: User) => {
+  const result = await UserModel.findOneAndUpdate({ id }, updateUser, {
+    new: true,
+  });
   return result;
 };
 
@@ -20,4 +30,5 @@ export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
   getSingleUserFromDB,
+  updateSingleUserFromDB,
 };
