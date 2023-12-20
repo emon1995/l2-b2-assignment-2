@@ -132,7 +132,7 @@ const deleteUserById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// delete single user delete method
+// add product to order put method
 const addProductToOrder = async (
   req: Request,
   res: Response,
@@ -173,6 +173,40 @@ const addProductToOrder = async (
     });
   }
 };
+
+// get all orders get method
+const getAllOrdersForUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await UserServices.getAllOrdersFromDB(userId);
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found!',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully',
+      data: {
+        orders: user.orders || [],
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch user',
+      error: error,
+    });
+  }
+};
 export const UserControllers = {
   createUser,
   getAllUser,
@@ -180,4 +214,5 @@ export const UserControllers = {
   updateUserById,
   deleteUserById,
   addProductToOrder,
+  getAllOrdersForUser,
 };
